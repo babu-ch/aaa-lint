@@ -5,7 +5,12 @@ Gem::Specification.new do |spec|
   spec.summary       = 'RuboCop cop enforcing the Arrange-Act-Assert pattern in test code.'
   spec.description   = 'A custom RuboCop cop that checks test blocks contain arrange/act/assert comments in order.'
   spec.license       = 'MIT'
-  spec.homepage      = 'https://github.com/babu-ch/aaa-lint'
+  spec.homepage      = 'https://babu-ch.github.io/aaa-lint/guide/rubocop'
+
+  spec.metadata['homepage_uri']      = spec.homepage
+  spec.metadata['source_code_uri']   = 'https://github.com/babu-ch/aaa-lint/tree/main/packages/rubocop-aaa'
+  spec.metadata['bug_tracker_uri']   = 'https://github.com/babu-ch/aaa-lint/issues'
+  spec.metadata['documentation_uri'] = 'https://babu-ch.github.io/aaa-lint/guide/rubocop'
 
   spec.required_ruby_version = '>= 3.0'
 
