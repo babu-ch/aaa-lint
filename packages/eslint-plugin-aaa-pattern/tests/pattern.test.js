@@ -109,6 +109,7 @@ ruleTester.run('pattern', rule, {
 
   invalid: [
     {
+      // Only arrange missing — message IDs pinpoint which section
       code: `
         it('missing arrange', () => {
           // act
@@ -117,7 +118,7 @@ ruleTester.run('pattern', rule, {
           expect(a).toBe(1)
         })
       `,
-      errors: [{ messageId: 'missing', data: { section: 'arrange' } }],
+      errors: [{ messageId: 'missingArrange' }],
     },
     {
       code: `
@@ -128,7 +129,62 @@ ruleTester.run('pattern', rule, {
           const b = a
         })
       `,
-      errors: [{ messageId: 'missing', data: { section: 'assert' } }],
+      errors: [{ messageId: 'missingAssert' }],
+    },
+    {
+      // Two missing — one error per missing section
+      code: `
+        it('missing two', () => {
+          // arrange
+          const a = 1
+        })
+      `,
+      errors: [{ messageId: 'missingAct' }, { messageId: 'missingAssert' }],
+    },
+    {
+      // All three missing — auto-fixable with a scaffold template
+      code:
+        "it('all missing', () => {\n" +
+        '  const a = 1\n' +
+        '  const b = a + 1\n' +
+        '  expect(b).toBe(2)\n' +
+        '})\n',
+      errors: [{ messageId: 'missingAll' }],
+      output:
+        "it('all missing', () => {\n" +
+        '  // arrange\n' +
+        '  // act\n' +
+        '  // assert\n' +
+        '  const a = 1\n' +
+        '  const b = a + 1\n' +
+        '  expect(b).toBe(2)\n' +
+        '})\n',
+    },
+    {
+      // Auto-fix uses the configured labels, not the English defaults
+      code:
+        "it('all missing jp', () => {\n" +
+        '  const a = 1\n' +
+        '  expect(a).toBe(1)\n' +
+        '})\n',
+      options: [
+        {
+          labels: {
+            arrange: ['準備'],
+            act: ['実行'],
+            assert: ['検証'],
+          },
+        },
+      ],
+      errors: [{ messageId: 'missingAll' }],
+      output:
+        "it('all missing jp', () => {\n" +
+        '  // 準備\n' +
+        '  // 実行\n' +
+        '  // 検証\n' +
+        '  const a = 1\n' +
+        '  expect(a).toBe(1)\n' +
+        '})\n',
     },
     {
       code: `
@@ -168,7 +224,7 @@ ruleTester.run('pattern', rule, {
         })
       `,
       options: [{ caseSensitive: true }],
-      errors: [{ messageId: 'missing', data: { section: 'arrange' } }],
+      errors: [{ messageId: 'missingArrange' }],
     },
   ],
 })

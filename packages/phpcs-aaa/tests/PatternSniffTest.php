@@ -47,6 +47,20 @@ final class PatternSniffTest extends TestCase
         return $flat;
     }
 
+    private function autoFix(string $code): string
+    {
+        $config = new Config([], false);
+        $config->standards = ['AAA'];
+        $config->sniffs = ['AAA.Tests.Pattern'];
+
+        $ruleset = new Ruleset($config);
+
+        $file = new DummyFile($code, $ruleset, $config);
+        $file->process();
+        $file->fixer->fixFile();
+        return $file->fixer->getContents();
+    }
+
     public function testAcceptsCorrectOrder(): void
     {
         $errors = $this->lint(<<<'PHP'
@@ -206,6 +220,62 @@ PHP,
         $this->assertNotEmpty($errors);
         $messages = implode("\n", array_column($errors, 'message'));
         $this->assertStringContainsString('arrange', $messages);
+    }
+
+    public function testFlagsEachMissingSectionSeparately(): void
+    {
+        $errors = $this->lint(<<<'PHP'
+<?php
+class SomeTest {
+    public function testMissingTwo(): void {
+        // arrange
+        $a = 1;
+    }
+}
+PHP);
+        $this->assertCount(2, $errors);
+        $messages = implode("\n", array_column($errors, 'message'));
+        $this->assertStringContainsString('"act"', $messages);
+        $this->assertStringContainsString('"assert"', $messages);
+    }
+
+    public function testAllMissingTriggersFixableError(): void
+    {
+        $errors = $this->lint(<<<'PHP'
+<?php
+class SomeTest {
+    public function testAllMissing(): void {
+        $a = 1;
+        $b = $a + 1;
+        $this->assertSame(2, $b);
+    }
+}
+PHP);
+        $this->assertCount(1, $errors);
+        $this->assertStringContainsString('Missing arrange/act/assert', $errors[0]['message']);
+    }
+
+    public function testAutoFixAllMissingInsertsTemplate(): void
+    {
+        $before = <<<'PHP'
+<?php
+class SomeTest {
+    public function testAllMissing(): void {
+        $a = 1;
+        $this->assertSame(1, $a);
+    }
+}
+PHP;
+        $after = $this->autoFix($before);
+        $this->assertStringContainsString('// arrange', $after);
+        $this->assertStringContainsString('// act', $after);
+        $this->assertStringContainsString('// assert', $after);
+        // Template is inserted before the assignment.
+        $arrangePos = strpos($after, '// arrange');
+        $assignPos  = strpos($after, '$a = 1');
+        $this->assertNotFalse($arrangePos);
+        $this->assertNotFalse($assignPos);
+        $this->assertLessThan($assignPos, $arrangePos);
     }
 
     public function testCaseSensitiveRejectsUppercase(): void

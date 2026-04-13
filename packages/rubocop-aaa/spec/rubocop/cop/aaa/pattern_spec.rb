@@ -11,6 +11,18 @@ RSpec.describe RuboCop::Cop::AAA::Pattern, :config do
     commissioner.investigate(processed).offenses
   end
 
+  def autocorrect(source)
+    processed = RuboCop::ProcessedSource.new(source, RUBY_VERSION.to_f)
+    cop = described_class.new(config)
+    commissioner = RuboCop::Cop::Commissioner.new([cop], [], raise_error: true)
+    report = commissioner.investigate(processed)
+    corrector = RuboCop::Cop::Corrector.new(processed)
+    report.offenses.each do |offense|
+      corrector.merge!(offense.corrector) if offense.corrector
+    end
+    corrector.process
+  end
+
   context 'with default config' do
     it 'accepts a block with arrange/act/assert in order' do
       offenses = inspect(<<~RUBY)
@@ -51,6 +63,41 @@ RSpec.describe RuboCop::Cop::AAA::Pattern, :config do
       RUBY
       expect(offenses.size).to eq(1)
       expect(offenses.first.message).to include('arrange')
+    end
+
+    it 'flags each missing section separately when multiple are missing' do
+      offenses = inspect(<<~RUBY)
+        it 'missing two' do
+          # arrange
+          a = 1
+        end
+      RUBY
+      messages = offenses.map(&:message).join("\n")
+      expect(offenses.size).to eq(2)
+      expect(messages).to include('"act"')
+      expect(messages).to include('"assert"')
+    end
+
+    it 'auto-corrects when all three sections are missing' do
+      source = <<~RUBY
+        it 'all missing' do
+          a = 1
+          b = a + 1
+          expect(b).to eq(2)
+        end
+      RUBY
+      offenses = inspect(source)
+      expect(offenses.size).to eq(1)
+      expect(offenses.first.message).to include('Missing arrange/act/assert')
+
+      corrected = autocorrect(source)
+      expect(corrected).to include('# arrange')
+      expect(corrected).to include('# act')
+      expect(corrected).to include('# assert')
+      # Template is inserted before the existing statements.
+      arrange_idx = corrected.index('# arrange')
+      a_idx = corrected.index('a = 1')
+      expect(arrange_idx).to be < a_idx
     end
 
     it 'flags wrong order' do

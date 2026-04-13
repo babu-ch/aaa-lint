@@ -25,6 +25,12 @@ class PatternSniff implements Sniff
 
     private const SECTIONS = ['arrange', 'act', 'assert'];
 
+    private const SECTION_HINTS = [
+        'arrange' => 'before the code that sets up test state',
+        'act'     => 'before the code that triggers the behavior under test',
+        'assert'  => 'before the code that verifies the result',
+    ];
+
     public function register()
     {
         return [T_FUNCTION];
@@ -62,22 +68,33 @@ class PatternSniff implements Sniff
             }
         }
 
+        $missing = [];
         foreach (self::SECTIONS as $section) {
             if (!isset($found[$section])) {
-                $phpcsFile->addError(
-                    sprintf('Missing "%s" comment in test method.', $section),
-                    $stackPtr,
-                    'Missing' . ucfirst($section)
-                );
-                return;
+                $missing[] = $section;
             }
+        }
+
+        if (count($missing) === count(self::SECTIONS)) {
+            $this->reportAllMissing($phpcsFile, $stackPtr, $opener, $tokens);
+            return;
+        }
+
+        if (!empty($missing)) {
+            foreach ($missing as $section) {
+                $this->reportMissingOne($phpcsFile, $stackPtr, $section);
+            }
+            return;
         }
 
         $prev = -1;
         foreach (self::SECTIONS as $section) {
             if ($found[$section] < $prev) {
                 $phpcsFile->addError(
-                    'AAA comments must appear in order: arrange -> act -> assert.',
+                    sprintf(
+                        'AAA comments must appear in order: arrange -> act -> assert. Found "%s" after "arrange/act" — move it to the right place.',
+                        $section
+                    ),
                     $found[$section],
                     'WrongOrder'
                 );
@@ -99,12 +116,79 @@ class PatternSniff implements Sniff
         foreach ($boundaries as [$section, $start, $end]) {
             if (!$this->hasCodeBetween($tokens, $start, $end)) {
                 $phpcsFile->addError(
-                    sprintf('Section "%s" has no statements.', $section),
+                    sprintf(
+                        'Section "%s" has no statements. Add code between // %s and the next section, or remove the // %s comment.',
+                        $section,
+                        $section,
+                        $section
+                    ),
                     $found[$section],
                     'EmptySection'
                 );
             }
         }
+    }
+
+    private function reportAllMissing(File $phpcsFile, int $stackPtr, int $opener, array $tokens): void
+    {
+        $labels = [
+            'arrange' => $this->preferredLabel('arrange'),
+            'act'     => $this->preferredLabel('act'),
+            'assert'  => $this->preferredLabel('assert'),
+        ];
+
+        $message = sprintf(
+            'Missing arrange/act/assert section comments. Insert // %s, // %s, and // %s to mark each section (auto-fix scaffolds a template at the top of the method).',
+            $labels['arrange'],
+            $labels['act'],
+            $labels['assert']
+        );
+
+        $fix = $phpcsFile->addFixableError($message, $stackPtr, 'MissingAll');
+        if (!$fix) {
+            return;
+        }
+
+        $indent = $this->detectIndent($phpcsFile, $opener);
+        $template =
+            "\n" . $indent . '// ' . $labels['arrange'] .
+            "\n" . $indent . '// ' . $labels['act'] .
+            "\n" . $indent . '// ' . $labels['assert'];
+
+        $phpcsFile->fixer->addContent($opener, $template);
+    }
+
+    private function reportMissingOne(File $phpcsFile, int $stackPtr, string $section): void
+    {
+        $message = sprintf(
+            'Missing "%s" comment. Insert // %s %s.',
+            $section,
+            $this->preferredLabel($section),
+            self::SECTION_HINTS[$section]
+        );
+        $phpcsFile->addError($message, $stackPtr, 'Missing' . ucfirst($section));
+    }
+
+    private function detectIndent(File $phpcsFile, int $opener): string
+    {
+        $tokens = $phpcsFile->getTokens();
+        // Prefer the indentation of the opener line + 4 spaces.
+        // Walk back to find the line's leading whitespace.
+        $line = $tokens[$opener]['line'];
+        $start = $opener;
+        while ($start > 0 && $tokens[$start - 1]['line'] === $line) {
+            $start--;
+        }
+        $lead = '';
+        if ($tokens[$start]['code'] === T_WHITESPACE) {
+            $lead = str_replace("\n", '', $tokens[$start]['content']);
+        }
+        return $lead . '    ';
+    }
+
+    private function preferredLabel(string $section): string
+    {
+        return $this->labels[$section][0] ?? $section;
     }
 
     private function isTestMethod(string $name): bool

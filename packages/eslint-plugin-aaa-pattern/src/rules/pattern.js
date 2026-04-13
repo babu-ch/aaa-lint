@@ -50,9 +50,32 @@ function getCalleeName(node) {
   return null
 }
 
+// Preferred label used when the rule inserts new comments.
+function preferredLabel(labels, section) {
+  return (labels[section] && labels[section][0]) || section
+}
+
+// Indentation to use inside the block body. Picks up the first statement's
+// leading whitespace if present, otherwise the block-opening line's indent + 2.
+function bodyIndent(sourceCode, body) {
+  if (body.body.length > 0) {
+    const firstStmt = body.body[0]
+    const text = sourceCode.getText()
+    let i = firstStmt.range[0] - 1
+    while (i >= 0 && (text[i] === ' ' || text[i] === '\t')) i--
+    return text.slice(i + 1, firstStmt.range[0])
+  }
+  // Fallback: indent of the `{` line + two spaces.
+  const openToken = sourceCode.getFirstToken(body)
+  const line = sourceCode.lines[openToken.loc.start.line - 1] || ''
+  const lead = line.match(/^\s*/)[0]
+  return lead + '  '
+}
+
 module.exports = {
   meta: {
     type: 'suggestion',
+    fixable: 'code',
     docs: {
       description: 'Enforce Arrange-Act-Assert comments in test blocks',
       recommended: false,
@@ -78,9 +101,18 @@ module.exports = {
       },
     ],
     messages: {
-      missing: 'Missing "{{section}}" comment in test block.',
-      order: 'AAA comments must appear in order: arrange → act → assert (found "{{found}}" after "{{previous}}").',
-      empty: 'Section "{{section}}" has no statements.',
+      missingAll:
+        'Missing arrange/act/assert section comments. Insert `// {{arrange}}`, `// {{act}}`, and `// {{assert}}` to mark each section — auto-fix will scaffold a template at the top of the block.',
+      missingArrange:
+        'Missing "arrange" comment. Insert `// {{label}}` before the code that sets up test state.',
+      missingAct:
+        'Missing "act" comment. Insert `// {{label}}` before the code that triggers the behavior under test.',
+      missingAssert:
+        'Missing "assert" comment. Insert `// {{label}}` before the code that verifies the result.',
+      order:
+        'AAA comments must appear in order: arrange → act → assert. Found "{{found}}" after "{{previous}}" — move "{{found}}" down or "{{previous}}" up.',
+      empty:
+        'Section "{{section}}" has no statements. Add code between `// {{section}}` and the next section, or remove the `// {{section}}` comment if the section is not needed.',
     },
   },
 
@@ -110,11 +142,45 @@ module.exports = {
           if (!seen[entry.section]) seen[entry.section] = entry
         }
 
-        for (const section of SECTIONS) {
-          if (!seen[section]) {
-            context.report({ node, messageId: 'missing', data: { section } })
-            return
+        const missing = SECTIONS.filter((s) => !seen[s])
+
+        if (missing.length === SECTIONS.length) {
+          const labels = {
+            arrange: preferredLabel(options.labels, 'arrange'),
+            act: preferredLabel(options.labels, 'act'),
+            assert: preferredLabel(options.labels, 'assert'),
           }
+          context.report({
+            node,
+            messageId: 'missingAll',
+            data: labels,
+            fix(fixer) {
+              const openBrace = sourceCode.getFirstToken(body)
+              const indent = bodyIndent(sourceCode, body)
+              const template =
+                `\n${indent}// ${labels.arrange}\n` +
+                `${indent}// ${labels.act}\n` +
+                `${indent}// ${labels.assert}`
+              return fixer.insertTextAfter(openBrace, template)
+            },
+          })
+          return
+        }
+
+        if (missing.length > 0) {
+          for (const section of missing) {
+            context.report({
+              node,
+              messageId:
+                section === 'arrange'
+                  ? 'missingArrange'
+                  : section === 'act'
+                  ? 'missingAct'
+                  : 'missingAssert',
+              data: { label: preferredLabel(options.labels, section) },
+            })
+          }
+          return
         }
 
         const orderedSections = [seen.arrange, seen.act, seen.assert]
