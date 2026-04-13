@@ -1,0 +1,21 @@
+AAA/Pattern:
+  Description: 'Enforce Arrange-Act-Assert comments in test blocks.'
+  Enabled: true
+  VersionAdded: '0.0.1'
+  Include:
+    - 'spec/**/*.rb'
+    - 'test/**/*.rb'
+  TestFunctions:
+    - it
+    - test
+    - specify
+    - example
+  Labels:
+    arrange:
+      - arrange
+    act:
+      - act
+    assert:
+      - assert
+  CaseSensitive: false
+  AllowEmptySection: true

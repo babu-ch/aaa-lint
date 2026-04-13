@@ -23,8 +23,8 @@ it('adds two numbers', () => {
 | Language | Linter | Package | Status |
 |---|---|---|---|
 | JS / TS | ESLint | [`eslint-plugin-aaa`](./packages/eslint-plugin-aaa) | WIP |
-| Ruby | RuboCop | `rubocop-aaa` | Planned |
-| PHP | PHP_CodeSniffer | `phpcs-aaa` | Planned |
+| Ruby | RuboCop | [`rubocop-aaa`](./packages/rubocop-aaa) | WIP |
+| PHP | PHP_CodeSniffer | [`phpcs-aaa`](./packages/phpcs-aaa) | WIP |
 
 ## Customizing labels
 

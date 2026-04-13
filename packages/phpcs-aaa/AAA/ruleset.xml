@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="AAA">
+    <description>Enforce the Arrange-Act-Assert pattern in test methods.</description>
+
+    <rule ref="AAA.Tests.Pattern"/>
+</ruleset>
