@@ -23,7 +23,11 @@ GEMSPEC="$PKG_DIR/rubocop-aaa.gemspec"
 cd "$ROOT_DIR"
 require_main_clean
 
-VERSION=$(grep -E "^\s*spec\.version\s*=" "$GEMSPEC" | sed -E "s/.*=\s*['\"]([^'\"]+)['\"].*/\1/")
+VERSION=$(ruby -e "puts Gem::Specification.load('$GEMSPEC').version" 2>/dev/null)
+if [ -z "$VERSION" ]; then
+  echo "error: failed to parse version from $GEMSPEC" >&2
+  exit 1
+fi
 echo "==> Releasing rubocop-aaa $VERSION"
 require_tag_not_exists "rubocop-aaa-v$VERSION"
 
