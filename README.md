@@ -40,6 +40,10 @@ There is no built-in preset besides the English default. Use the `labels` option
 }
 ```
 
+## Documentation
+
+Full docs (English / 日本語 / 中文 / 한국어 / Español / Français / Deutsch / Português): <https://babu-ch.github.io/aaa-lint/>
+
 ## Development
 
 All tests run inside Docker — no local Node/Ruby/PHP installs required. See [DEVELOPMENT.md](./DEVELOPMENT.md).
