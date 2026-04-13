@@ -1,18 +1,18 @@
 # ESLint (JS / TS)
 
-`eslint-plugin-aaa` 在 JavaScript / TypeScript 测试文件中强制执行 Arrange-Act-Assert 模式。
+`eslint-plugin-aaa-pattern` 在 JavaScript / TypeScript 测试文件中强制执行 Arrange-Act-Assert 模式。
 
 ## 安装
 
 ```bash
-npm install --save-dev eslint-plugin-aaa
+npm install --save-dev eslint-plugin-aaa-pattern
 ```
 
 ## Flat config (ESLint v9+)
 
 ```js
 // eslint.config.js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [
   {
@@ -28,7 +28,7 @@ export default [
 或使用内置的推荐配置:
 
 ```js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [aaa.configs.recommended]
 ```

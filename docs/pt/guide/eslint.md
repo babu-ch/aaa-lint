@@ -1,18 +1,18 @@
 # ESLint (JS / TS)
 
-`eslint-plugin-aaa` aplica o padrão Arrange-Act-Assert em arquivos de teste JavaScript / TypeScript.
+`eslint-plugin-aaa-pattern` aplica o padrão Arrange-Act-Assert em arquivos de teste JavaScript / TypeScript.
 
 ## Instalação
 
 ```bash
-npm install --save-dev eslint-plugin-aaa
+npm install --save-dev eslint-plugin-aaa-pattern
 ```
 
 ## Flat config (ESLint v9+)
 
 ```js
 // eslint.config.js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [
   {
@@ -28,7 +28,7 @@ export default [
 Ou use a config recomendada embutida:
 
 ```js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [aaa.configs.recommended]
 ```

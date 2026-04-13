@@ -1,11 +1,11 @@
-# eslint-plugin-aaa
+# eslint-plugin-aaa-pattern
 
 Enforce the **Arrange-Act-Assert** pattern in test code via ESLint.
 
 ## Install
 
 ```bash
-npm install --save-dev eslint-plugin-aaa
+npm install --save-dev eslint-plugin-aaa-pattern
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install --save-dev eslint-plugin-aaa
 
 ```js
 // eslint.config.js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [
   {
@@ -30,7 +30,7 @@ export default [
 Or use the bundled recommended config:
 
 ```js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [aaa.configs.recommended]
 ```

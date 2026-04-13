@@ -1,18 +1,18 @@
 # ESLint (JS / TS)
 
-`eslint-plugin-aaa` impose le motif Arrange-Act-Assert dans les fichiers de test JavaScript / TypeScript.
+`eslint-plugin-aaa-pattern` impose le motif Arrange-Act-Assert dans les fichiers de test JavaScript / TypeScript.
 
 ## Installation
 
 ```bash
-npm install --save-dev eslint-plugin-aaa
+npm install --save-dev eslint-plugin-aaa-pattern
 ```
 
 ## Flat config (ESLint v9+)
 
 ```js
 // eslint.config.js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [
   {
@@ -28,7 +28,7 @@ export default [
 Ou utilisez la config recommandée fournie :
 
 ```js
-import aaa from 'eslint-plugin-aaa'
+import aaa from 'eslint-plugin-aaa-pattern'
 
 export default [aaa.configs.recommended]
 ```

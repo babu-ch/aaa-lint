@@ -26,7 +26,7 @@ AAA 패턴을 따르는 테스트는 읽기 쉽고 수정하기도 쉽습니다.
 
 | 언어 | Linter | 패키지 |
 |---|---|---|
-| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa`](./eslint) |
+| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa-pattern`](./eslint) |
 | Ruby | [RuboCop](https://rubocop.org/) | [`rubocop-aaa`](./rubocop) |
 | PHP | [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) | [`phpcs-aaa`](./phpcs) |
 

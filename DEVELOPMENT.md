@@ -12,7 +12,7 @@ That's it. No local Node, Ruby, PHP, or Composer needed.
 
 ```bash
 make test          # all three languages
-make test-node     # eslint-plugin-aaa
+make test-node     # eslint-plugin-aaa-pattern
 make test-ruby     # rubocop-aaa
 make test-php      # phpcs-aaa
 ```
@@ -37,7 +37,7 @@ If you have the relevant toolchain installed you can also run tests directly:
 
 ```bash
 # JS
-npm test --workspace=eslint-plugin-aaa
+npm test --workspace=eslint-plugin-aaa-pattern
 
 # Ruby
 cd packages/rubocop-aaa && bundle install && bundle exec rspec

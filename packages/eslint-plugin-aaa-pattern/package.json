@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-aaa",
+  "name": "eslint-plugin-aaa-pattern",
   "version": "0.0.1",
   "description": "ESLint plugin that enforces the Arrange-Act-Assert pattern in test code.",
   "keywords": [
@@ -15,7 +15,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/babu-ch/aaa-lint.git",
-    "directory": "packages/eslint-plugin-aaa"
+    "directory": "packages/eslint-plugin-aaa-pattern"
   },
   "bugs": {
     "url": "https://github.com/babu-ch/aaa-lint/issues"

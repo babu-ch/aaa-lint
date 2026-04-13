@@ -4,7 +4,7 @@ This monorepo ships three packages to three different registries:
 
 | Package | Registry | Source path |
 |---|---|---|
-| `eslint-plugin-aaa` | [npm](https://www.npmjs.com/) | `packages/eslint-plugin-aaa` |
+| `eslint-plugin-aaa-pattern` | [npm](https://www.npmjs.com/) | `packages/eslint-plugin-aaa-pattern` |
 | `rubocop-aaa` | [RubyGems](https://rubygems.org/) | `packages/rubocop-aaa` |
 | `babu-ch/phpcs-aaa` | [Packagist](https://packagist.org/) | `packages/phpcs-aaa` |
 
@@ -17,15 +17,15 @@ Releases are **manual on purpose** — release frequency is low and we want a hu
 | Bump version | edit `package.json` | edit `.gemspec` | (none — Packagist reads git tags) |
 | Build artifact | npm packs `src/` | `gem build` produces `.gem` | `git subtree split` |
 | Push | `npm publish` | `gem push` | push to split mirror + tag |
-| User installs via | `npm install eslint-plugin-aaa@<v>` | `gem install rubocop-aaa -v <v>` | `composer require babu-ch/phpcs-aaa:<v>` |
+| User installs via | `npm install eslint-plugin-aaa-pattern@<v>` | `gem install rubocop-aaa -v <v>` | `composer require babu-ch/phpcs-aaa:<v>` |
 
-Each release script also creates a per-package tag in the monorepo (`eslint-plugin-aaa-v<v>`, etc.) so `git log --tags` shows the release history.
+Each release script also creates a per-package tag in the monorepo (`eslint-plugin-aaa-pattern-v<v>`, etc.) so `git log --tags` shows the release history.
 
 ## Pre-release checklist (every package)
 
 1. `make test` — all three suites green.
 2. Bump the version in the relevant manifest:
-   - npm: `packages/eslint-plugin-aaa/package.json` (`version`)
+   - npm: `packages/eslint-plugin-aaa-pattern/package.json` (`version`)
    - RubyGems: `packages/rubocop-aaa/rubocop-aaa.gemspec` (`spec.version`)
    - Packagist: `packages/phpcs-aaa/composer.json` (`version`)
 3. Commit and push the bump (`chore: bump <pkg> to <v>`).
@@ -36,7 +36,7 @@ Each release script also creates a per-package tag in the monorepo (`eslint-plug
 All run from the monorepo root. Each script picks up the version from the package's manifest.
 
 ```bash
-make release-eslint    # eslint-plugin-aaa -> npm
+make release-eslint    # eslint-plugin-aaa-pattern -> npm
 make release-rubocop   # rubocop-aaa -> RubyGems
 make release-phpcs     # phpcs-aaa -> Packagist (via split mirror)
 make release-all       # all three sequentially
@@ -53,7 +53,7 @@ All scripts:
 - Push the tag back to `origin` after a successful publish.
 
 `release-eslint.sh`:
-- Reads the version from `packages/eslint-plugin-aaa/package.json`.
+- Reads the version from `packages/eslint-plugin-aaa-pattern/package.json`.
 - Lets `npm publish`'s `prepublishOnly` hook run the test suite.
 - Adds `--access public` automatically on the first publish (when the package does not yet exist on npm).
 

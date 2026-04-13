@@ -22,7 +22,7 @@ it('adds two numbers', () => {
 
 | Language | Linter | Package | Status |
 |---|---|---|---|
-| JS / TS | ESLint | [`eslint-plugin-aaa`](./packages/eslint-plugin-aaa) | WIP |
+| JS / TS | ESLint | [`eslint-plugin-aaa-pattern`](./packages/eslint-plugin-aaa-pattern) | WIP |
 | Ruby | RuboCop | [`rubocop-aaa`](./packages/rubocop-aaa) | WIP |
 | PHP | PHP_CodeSniffer | [`phpcs-aaa`](./packages/phpcs-aaa) | WIP |
 

@@ -26,7 +26,7 @@ it('adds two numbers', () => {
 
 | 语言 | Linter | 包 |
 |---|---|---|
-| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa`](./eslint) |
+| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa-pattern`](./eslint) |
 | Ruby | [RuboCop](https://rubocop.org/) | [`rubocop-aaa`](./rubocop) |
 | PHP | [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) | [`phpcs-aaa`](./phpcs) |
 

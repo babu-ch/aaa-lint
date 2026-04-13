@@ -26,7 +26,7 @@ Les tests qui suivent le motif AAA sont plus faciles à lire et à modifier. Les
 
 | Langage | Linter | Paquet |
 |---|---|---|
-| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa`](./eslint) |
+| JavaScript / TypeScript | [ESLint](https://eslint.org/) | [`eslint-plugin-aaa-pattern`](./eslint) |
 | Ruby | [RuboCop](https://rubocop.org/) | [`rubocop-aaa`](./rubocop) |
 | PHP | [PHP_CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) | [`phpcs-aaa`](./phpcs) |
 
