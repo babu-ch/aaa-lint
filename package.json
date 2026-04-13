@@ -1,0 +1,13 @@
+{
+  "name": "aaa-lint",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Multi-language lint plugins that enforce the AAA (Arrange-Act-Assert) pattern in test code.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present"
+  },
+  "license": "MIT"
+}
