@@ -2,6 +2,9 @@
 
 PHP_CodeSniffer standard that enforces the **Arrange-Act-Assert** pattern in PHP test methods.
 
+> **Heads up:** if you are reading this on the `babu-ch/phpcs-aaa` repo, that is a **read-only split mirror** distributed via Packagist.
+> Source, issues, and pull requests live in the parent monorepo: <https://github.com/babu-ch/aaa-lint>.
+
 ## Install
 
 ```bash

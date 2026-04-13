@@ -52,6 +52,10 @@ All tests run inside Docker — no local Node/Ruby/PHP installs required. See [D
 make test          # run all three language suites
 ```
 
+## Releasing
+
+See [RELEASE.md](./RELEASE.md). The PHP package ships through a split mirror at <https://github.com/babu-ch/phpcs-aaa> driven by `scripts/release-phpcs.sh`.
+
 ## License
 
 MIT
