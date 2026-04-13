@@ -85,6 +85,15 @@ Note: the `labels` property via XML only accepts scalar values per key. For mult
 </property>
 ```
 
+## Development
+
+```bash
+composer install
+composer test
+```
+
+Tests use PHPUnit against the PHPCS Ruleset/DummyFile API directly (no fixture file dance).
+
 ## License
 
 MIT
