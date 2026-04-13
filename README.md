@@ -1,5 +1,7 @@
 # aaa-lint
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/babu-ch/aaa-lint)
+
 Multi-language lint plugins that enforce the **AAA (Arrange-Act-Assert)** pattern in test code.
 
 Each plugin checks that every test block contains three section-marker comments — `arrange`, `act`, `assert` — in that exact order.
