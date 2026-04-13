@@ -121,3 +121,9 @@ it('also bad', () => {
   expect(x).toBe(y)
 })
 ```
+
+## Auto-Fix
+
+Wenn **alle drei** Sektions-Kommentare fehlen, fügt `eslint --fix` eine `// arrange` / `// act` / `// assert`-Vorlage am Anfang des Testblocks ein. Verschiebe danach jeden Kommentar über den Code, zu dem er gehört.
+
+Andere Fälle (einer oder zwei fehlend, falsche Reihenfolge, leere Sektion) werden nicht automatisch korrigiert — die richtige Einfügeposition hängt von der Absicht des Tests ab, und die Fehlermeldung sagt dir genau, „was" und „wo" einzufügen ist.

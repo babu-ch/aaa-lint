@@ -91,3 +91,9 @@ it 'also bad' do
   expect(x).to eq(y)
 end
 ```
+
+## Auto-Korrektur
+
+Wenn **alle drei** Sektions-Kommentare fehlen, fügt `rubocop -a` (oder `--autocorrect`) eine `# arrange` / `# act` / `# assert`-Vorlage am Anfang des Blocks ein. Verschiebe danach jeden Kommentar über den Code, zu dem er gehört.
+
+Andere Fälle (einer oder zwei fehlend, falsche Reihenfolge, leere Sektion) werden nicht automatisch korrigiert — die richtige Einfügeposition hängt von der Absicht des Tests ab, und die Offense-Meldung sagt dir genau, „was" und „wo" einzufügen ist.

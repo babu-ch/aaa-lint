@@ -121,3 +121,9 @@ it('also bad', () => {
   expect(x).toBe(y)
 })
 ```
+
+## Auto-fix
+
+When **all three** section comments are missing, `eslint --fix` inserts a `// arrange` / `// act` / `// assert` template at the top of the test block. You then move each comment above the code that belongs to it.
+
+Other cases (one or two missing, wrong order, empty section) are not auto-fixed because the correct insertion point depends on the test's intent — the error message tells you exactly what to add and where.

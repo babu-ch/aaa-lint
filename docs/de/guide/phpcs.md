@@ -89,3 +89,9 @@ public function testAlsoBad(): void
     $this->assertSame($y, $x);
 }
 ```
+
+## Auto-Fix
+
+Wenn **alle drei** Sektions-Kommentare fehlen, fügt `vendor/bin/phpcbf` (der mit PHP_CodeSniffer mitgelieferte Auto-Fixer) eine `// arrange` / `// act` / `// assert`-Vorlage am Anfang der Testmethode ein. Verschiebe danach jeden Kommentar über den Code, zu dem er gehört.
+
+Andere Fälle (einer oder zwei fehlend, falsche Reihenfolge, leere Sektion) werden nicht automatisch korrigiert — die richtige Einfügeposition hängt von der Absicht des Tests ab, und die Fehlermeldung sagt dir genau, „was" und „wo" einzufügen ist.

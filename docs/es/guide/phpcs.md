@@ -89,3 +89,9 @@ public function testAlsoBad(): void
     $this->assertSame($y, $x);
 }
 ```
+
+## Auto-fix
+
+Cuando los tres comentarios de sección están **todos ausentes**, `vendor/bin/phpcbf` (el auto-fixer incluido con PHP_CodeSniffer) inserta una plantilla `// arrange` / `// act` / `// assert` al inicio del método de test. Luego solo tienes que mover cada comentario sobre el código que le corresponde.
+
+Otros casos (uno o dos ausentes, orden incorrecto, sección vacía) no se corrigen automáticamente — la posición correcta depende de la intención del test, y el mensaje de error te dice exactamente «qué» añadir y «dónde».

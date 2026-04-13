@@ -91,3 +91,9 @@ it 'also bad' do
   expect(x).to eq(y)
 end
 ```
+
+## Auto-correction
+
+Quand les trois commentaires de section manquent **tous**, `rubocop -a` (ou `--autocorrect`) insère un modèle `# arrange` / `# act` / `# assert` en haut du bloc. Il ne reste plus qu'à déplacer chaque commentaire au-dessus du code qui lui correspond.
+
+Les autres cas (un ou deux manquants, ordre incorrect, section vide) ne sont pas auto-corrigés — l'emplacement correct dépend de l'intention du test, et le message d'offense indique précisément « quoi » ajouter et « où ».

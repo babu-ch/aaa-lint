@@ -83,6 +83,12 @@ AAA/Pattern:
     assert:  [検証, 確認]
 ```
 
+## Auto-correct
+
+When **all three** section comments are missing, `rubocop -a` (or `rubocop --autocorrect`) inserts a `# arrange` / `# act` / `# assert` template at the top of the block. You then move each comment above the code that belongs to it.
+
+Other cases — one or two sections missing, wrong order, empty section — are reported with explicit hints in the offense message but are not auto-corrected, because the correct insertion point depends on the test's intent.
+
 ## License
 
 MIT

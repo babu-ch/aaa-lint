@@ -91,3 +91,9 @@ it 'also bad' do
   expect(x).to eq(y)
 end
 ```
+
+## Auto-corrección
+
+Cuando los tres comentarios de sección están **todos ausentes**, `rubocop -a` (o `--autocorrect`) inserta una plantilla `# arrange` / `# act` / `# assert` al inicio del bloque. Luego solo tienes que mover cada comentario sobre el código que le corresponde.
+
+Otros casos (uno o dos ausentes, orden incorrecto, sección vacía) no se auto-corrigen — la posición correcta depende de la intención del test, y el mensaje de la offense te dice exactamente «qué» añadir y «dónde».

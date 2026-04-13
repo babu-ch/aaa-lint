@@ -88,6 +88,12 @@ Note: the `labels` property via XML only accepts scalar values per key. For mult
 </property>
 ```
 
+## Auto-fix
+
+When **all three** section comments are missing, `vendor/bin/phpcbf` (the auto-fixer that ships with PHP_CodeSniffer) inserts a `// arrange` / `// act` / `// assert` template at the top of the test method. You then move each comment above the code that belongs to it.
+
+Other cases — one or two sections missing, wrong order, empty section — are reported with explicit hints in the error message but are not auto-fixed, because the correct insertion point depends on the test's intent.
+
 ## Development
 
 ```bash

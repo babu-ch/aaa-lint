@@ -122,6 +122,12 @@ Because Japanese phrasing varies (準備 vs 前準備, 検証 vs 確認), the pl
 }
 ```
 
+## Auto-fix
+
+When **all three** section comments are missing, `eslint --fix` (or your editor's "fix on save") inserts a `// arrange` / `// act` / `// assert` template at the top of the test block. You then move each comment above the code that belongs to it.
+
+Other cases — one or two sections missing, wrong order, empty section — are reported with explicit hints in the error message but are not auto-fixed, because the correct insertion point depends on the test's intent.
+
 ## License
 
 MIT

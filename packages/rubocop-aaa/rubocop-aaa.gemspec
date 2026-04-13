@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rubocop-aaa'
-  spec.version       = '0.0.1'
+  spec.version       = '0.0.2'
   spec.authors       = ['babu-ch']
   spec.summary       = 'RuboCop cop enforcing the Arrange-Act-Assert pattern in test code.'
   spec.description   = 'A custom RuboCop cop that checks test blocks contain arrange/act/assert comments in order.'
