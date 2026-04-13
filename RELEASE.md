@@ -8,72 +8,75 @@ This monorepo ships three packages to three different registries:
 | `rubocop-aaa` | [RubyGems](https://rubygems.org/) | `packages/rubocop-aaa` |
 | `babu-ch/phpcs-aaa` | [Packagist](https://packagist.org/) | `packages/phpcs-aaa` |
 
-Releases are **manual on purpose** — release frequency is low and we want a human to confirm each cut.
+Releases are **manual on purpose** — release frequency is low and we want a human to confirm each cut. All commands below run from the **monorepo root**.
 
-## Common pre-release checklist
+## What "release" actually does
+
+| Step | npm | RubyGems | Packagist |
+|---|---|---|---|
+| Bump version | edit `package.json` | edit `.gemspec` | (none — Packagist reads git tags) |
+| Build artifact | npm packs `src/` | `gem build` produces `.gem` | `git subtree split` |
+| Push | `npm publish` | `gem push` | push to split mirror + tag |
+| User installs via | `npm install eslint-plugin-aaa@<v>` | `gem install rubocop-aaa -v <v>` | `composer require babu-ch/phpcs-aaa:<v>` |
+
+Each release script also creates a per-package tag in the monorepo (`eslint-plugin-aaa-v<v>`, etc.) so `git log --tags` shows the release history.
+
+## Pre-release checklist (every package)
 
 1. `make test` — all three suites green.
-2. Bump the version in the package's manifest:
+2. Bump the version in the relevant manifest:
    - npm: `packages/eslint-plugin-aaa/package.json` (`version`)
    - RubyGems: `packages/rubocop-aaa/rubocop-aaa.gemspec` (`spec.version`)
-   - Packagist: `packages/phpcs-aaa/composer.json` — Packagist reads versions from git tags only, no manifest bump needed.
-3. Update the package's CHANGELOG (TODO once we have one).
-4. Commit and push the bump to `main`.
+   - Packagist: nothing — Packagist tracks the git tag pushed by the script.
+3. Commit and push the bump (`chore: bump <pkg> to <v>`).
+4. Run the appropriate release command below.
 
----
+## Release commands
 
-## Releasing `eslint-plugin-aaa` to npm
-
-```bash
-cd packages/eslint-plugin-aaa
-npm publish
-```
-
-First publish requires `npm publish --access public`. 2FA enabled on the npm account.
-
-## Releasing `rubocop-aaa` to RubyGems
+All run from the monorepo root.
 
 ```bash
-cd packages/rubocop-aaa
-gem build rubocop-aaa.gemspec
-gem push rubocop-aaa-<version>.gem
-rm rubocop-aaa-<version>.gem
+make release-eslint  VERSION=0.0.2     # eslint-plugin-aaa -> npm
+make release-rubocop VERSION=0.0.2     # rubocop-aaa -> RubyGems
+make release-phpcs   VERSION=0.0.2     # phpcs-aaa -> Packagist (via split mirror)
+make release-all     VERSION=0.0.2     # all three at the same version
 ```
 
-The gemspec sets `rubygems_mfa_required = 'true'` so RubyGems will require 2FA on push.
+Each script is also runnable directly: `scripts/release-eslint.sh 0.0.2`.
 
-## Releasing `phpcs-aaa` to Packagist
+## What each script checks before publishing
 
-Packagist requires `composer.json` at the **root** of a repository, but ours lives in `packages/phpcs-aaa/`. To bridge that gap we keep a **read-only split mirror** at <https://github.com/babu-ch/phpcs-aaa> and push to it manually at release time.
+All scripts:
+- Refuse to run if the working tree is dirty.
+- Refuse to run if you're not on `main`.
+- Push a tag back to `origin` (`<package>-v<version>`).
 
-### One-time setup (per machine)
+`release-eslint.sh`:
+- Verifies `package.json` version matches the `<version>` argument.
+- Lets `npm publish`'s `prepublishOnly` hook run the test suite.
+- Adds `--access public` automatically on the first publish (when the package does not yet exist on npm).
 
-```bash
-git remote add phpcs-aaa-split git@github.com:babu-ch/phpcs-aaa.git
-```
+`release-rubocop.sh`:
+- Verifies the gemspec version matches the `<version>` argument.
+- Re-runs `rspec` via Docker before pushing.
+- Cleans up the built `.gem` file even on failure.
 
-(SSH must be configured for GitHub on the machine; HTTPS is fine too — substitute the URL.)
+`release-phpcs.sh`:
+- Verifies the `phpcs-aaa-split` git remote is configured.
+- Splits `packages/phpcs-aaa/` into a synthetic commit, pushes it to the split mirror's `main`, and tags `v<version>` there.
 
-### At each release
+## One-time setup per machine / per person
 
-From the repo root, on `main`:
+| Registry | Setup |
+|---|---|
+| npm | `npm login` (npm.js account with publish access). 2FA enabled. |
+| RubyGems | `gem signin` (RubyGems account with push access). 2FA enabled — gemspec sets `rubygems_mfa_required = 'true'`. |
+| Packagist | `git remote add phpcs-aaa-split https://github.com/babu-ch/phpcs-aaa.git`. Packagist itself only needs to be told about the split repo once at the very first release (Submit the URL on packagist.org). |
 
-```bash
-scripts/release-phpcs.sh <version>   # e.g. scripts/release-phpcs.sh 0.0.2
-```
+## Why a Packagist split mirror?
 
-The script does:
-
-1. `git subtree split --prefix=packages/phpcs-aaa main` — synthesizes a commit whose tree is just `packages/phpcs-aaa/`.
-2. Pushes that commit to the split mirror's `main`.
-3. Tags it `v<version>` on the split mirror.
-
-Packagist's GitHub webhook picks up the new tag within a minute and the new version goes live at <https://packagist.org/packages/babu-ch/phpcs-aaa>.
-
-### Why a split mirror?
-
-- Packagist auto-discovers versions from git tags on the registered repo's root `composer.json`. There is no per-path option.
+- Packagist auto-discovers versions from git tags on the registered repo's **root** `composer.json`. There is no per-path option.
 - A split mirror is the standard pattern for monorepo PHP packages (Symfony, Laravel, etc. all do this).
-- The mirror is **distribution-only**: PRs and issues are not accepted there. Its README and the in-package `README.md` both link back to this monorepo.
+- The mirror is **distribution-only** — PRs and issues are not accepted there. Both its repo description and the in-package `README.md` link contributors back to this monorepo.
 
 If the manual `subtree push` ever becomes a chore (release frequency goes up), the same flow can be automated via GitHub Actions + a deploy key on the split mirror. For now we keep it manual to avoid the secret-management overhead.
