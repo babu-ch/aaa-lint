@@ -15,22 +15,18 @@ test-php:
 
 # ---- releases -------------------------------------------------------------
 # Bump the package's manifest version first, commit, then run.
-# Usage: make release-eslint VERSION=0.0.2
+# Each script reads the version from the manifest (no VERSION arg).
 release-eslint:
-	@if [ -z "$(VERSION)" ]; then echo "usage: make release-eslint VERSION=x.y.z"; exit 1; fi
-	scripts/release-eslint.sh $(VERSION)
+	scripts/release-eslint.sh
 
 release-rubocop:
-	@if [ -z "$(VERSION)" ]; then echo "usage: make release-rubocop VERSION=x.y.z"; exit 1; fi
-	scripts/release-rubocop.sh $(VERSION)
+	scripts/release-rubocop.sh
 
 release-phpcs:
-	@if [ -z "$(VERSION)" ]; then echo "usage: make release-phpcs VERSION=x.y.z"; exit 1; fi
-	scripts/release-phpcs.sh $(VERSION)
+	scripts/release-phpcs.sh
 
 release-all:
-	@if [ -z "$(VERSION)" ]; then echo "usage: make release-all VERSION=x.y.z"; exit 1; fi
-	scripts/release-all.sh $(VERSION)
+	scripts/release-all.sh
 
 # ---- housekeeping ---------------------------------------------------------
 clean:

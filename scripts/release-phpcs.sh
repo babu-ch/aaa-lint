@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Push packages/phpcs-aaa to the babu-ch/phpcs-aaa split mirror and tag a release.
-# Usage:  scripts/release-phpcs.sh <version>   e.g. scripts/release-phpcs.sh 0.0.2
+# Push packages/phpcs-aaa to the babu-ch/phpcs-aaa split mirror and tag
+# the version recorded in composer.json.
+# Usage:  scripts/release-phpcs.sh
 #
 # Prereqs:
 #   - One-time: git remote add phpcs-aaa-split https://github.com/babu-ch/phpcs-aaa.git
+#   - packages/phpcs-aaa/composer.json "version" already bumped + committed
 #   - clean working tree on main
 #
 # Run from the monorepo root.
@@ -15,9 +17,9 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # shellcheck source=./_lib.sh
 source "$SCRIPT_DIR/_lib.sh"
 
-VERSION="${1:?usage: scripts/release-phpcs.sh <version>}"
 REMOTE="phpcs-aaa-split"
 PREFIX="packages/phpcs-aaa"
+COMPOSER_JSON="$ROOT_DIR/$PREFIX/composer.json"
 
 cd "$ROOT_DIR"
 require_main_clean
@@ -27,6 +29,10 @@ if ! git remote get-url "$REMOTE" >/dev/null 2>&1; then
   echo "  run: git remote add $REMOTE https://github.com/babu-ch/phpcs-aaa.git" >&2
   exit 1
 fi
+
+VERSION=$(node -p "require('$COMPOSER_JSON').version")
+echo "==> Releasing phpcs-aaa $VERSION"
+require_tag_not_exists "phpcs-aaa-v$VERSION"
 
 echo "==> Splitting $PREFIX from main..."
 SPLIT_SHA=$(git subtree split --prefix="$PREFIX" main)

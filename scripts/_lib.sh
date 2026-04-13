@@ -18,11 +18,21 @@ require_main_clean() {
 
 create_tag() {
   local tag="$1"
-  if git rev-parse "refs/tags/$tag" >/dev/null 2>&1; then
-    echo "==> Tag $tag already exists, skipping"
-    return 0
-  fi
   echo "==> Tagging $tag"
   git tag -a "$tag" -m "$tag"
   git push origin "$tag"
+}
+
+# Refuses if the given tag already exists locally or on origin.
+# Use as an early guard so we don't try to release a version twice.
+require_tag_not_exists() {
+  local tag="$1"
+  if git rev-parse "refs/tags/$tag" >/dev/null 2>&1; then
+    echo "error: tag $tag already exists locally — bump the manifest version" >&2
+    exit 1
+  fi
+  if git ls-remote --tags origin "refs/tags/$tag" | grep -q .; then
+    echo "error: tag $tag already exists on origin — bump the manifest version" >&2
+    exit 1
+  fi
 }

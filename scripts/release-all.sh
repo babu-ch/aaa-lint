@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-# Release all three packages at the same version.
-# Usage:  scripts/release-all.sh <version>
+# Release all three packages at the versions currently in their manifests.
+# Usage:  scripts/release-all.sh
 #
-# Run from the monorepo root. Each underlying release-*.sh checks its own
-# manifest version, so bump all three manifests to <version> beforehand.
+# Run from the monorepo root.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-VERSION="${1:?usage: scripts/release-all.sh <version>}"
 
-"$SCRIPT_DIR/release-eslint.sh"  "$VERSION"
-"$SCRIPT_DIR/release-rubocop.sh" "$VERSION"
-"$SCRIPT_DIR/release-phpcs.sh"   "$VERSION"
+"$SCRIPT_DIR/release-eslint.sh"
+"$SCRIPT_DIR/release-rubocop.sh"
+"$SCRIPT_DIR/release-phpcs.sh"
 
 echo
-echo "All three packages released at v$VERSION."
+echo "All three packages released."

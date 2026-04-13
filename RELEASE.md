@@ -27,41 +27,43 @@ Each release script also creates a per-package tag in the monorepo (`eslint-plug
 2. Bump the version in the relevant manifest:
    - npm: `packages/eslint-plugin-aaa/package.json` (`version`)
    - RubyGems: `packages/rubocop-aaa/rubocop-aaa.gemspec` (`spec.version`)
-   - Packagist: nothing — Packagist tracks the git tag pushed by the script.
+   - Packagist: `packages/phpcs-aaa/composer.json` (`version`)
 3. Commit and push the bump (`chore: bump <pkg> to <v>`).
-4. Run the appropriate release command below.
+4. Run the release command. Each script reads the version straight from the manifest — no argument needed.
 
 ## Release commands
 
-All run from the monorepo root.
+All run from the monorepo root. Each script picks up the version from the package's manifest.
 
 ```bash
-make release-eslint  VERSION=0.0.2     # eslint-plugin-aaa -> npm
-make release-rubocop VERSION=0.0.2     # rubocop-aaa -> RubyGems
-make release-phpcs   VERSION=0.0.2     # phpcs-aaa -> Packagist (via split mirror)
-make release-all     VERSION=0.0.2     # all three at the same version
+make release-eslint    # eslint-plugin-aaa -> npm
+make release-rubocop   # rubocop-aaa -> RubyGems
+make release-phpcs     # phpcs-aaa -> Packagist (via split mirror)
+make release-all       # all three sequentially
 ```
 
-Each script is also runnable directly: `scripts/release-eslint.sh 0.0.2`.
+Each script is also runnable directly: `scripts/release-eslint.sh`.
 
 ## What each script checks before publishing
 
 All scripts:
 - Refuse to run if the working tree is dirty.
 - Refuse to run if you're not on `main`.
-- Push a tag back to `origin` (`<package>-v<version>`).
+- Refuse to run if the per-package tag (`<package>-v<version>`) already exists locally or on `origin` — that means the version was already cut, you need to bump the manifest first.
+- Push the tag back to `origin` after a successful publish.
 
 `release-eslint.sh`:
-- Verifies `package.json` version matches the `<version>` argument.
+- Reads the version from `packages/eslint-plugin-aaa/package.json`.
 - Lets `npm publish`'s `prepublishOnly` hook run the test suite.
 - Adds `--access public` automatically on the first publish (when the package does not yet exist on npm).
 
 `release-rubocop.sh`:
-- Verifies the gemspec version matches the `<version>` argument.
+- Reads the version from `packages/rubocop-aaa/rubocop-aaa.gemspec`.
 - Re-runs `rspec` via Docker before pushing.
 - Cleans up the built `.gem` file even on failure.
 
 `release-phpcs.sh`:
+- Reads the version from `packages/phpcs-aaa/composer.json`.
 - Verifies the `phpcs-aaa-split` git remote is configured.
 - Splits `packages/phpcs-aaa/` into a synthetic commit, pushes it to the split mirror's `main`, and tags `v<version>` there.
 

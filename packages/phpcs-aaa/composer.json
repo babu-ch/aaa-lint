@@ -1,6 +1,7 @@
 {
   "name": "babu-ch/phpcs-aaa",
   "description": "PHP_CodeSniffer standard that enforces the Arrange-Act-Assert pattern in test code.",
+  "version": "0.0.1",
   "type": "phpcodesniffer-standard",
   "license": "MIT",
   "homepage": "https://babu-ch.github.io/aaa-lint/guide/phpcs",
