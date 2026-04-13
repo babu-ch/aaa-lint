@@ -5,13 +5,13 @@ PHP_CodeSniffer standard that enforces the **Arrange-Act-Assert** pattern in PHP
 ## Install
 
 ```bash
-composer require --dev aaa-lint/phpcs-aaa
+composer require --dev babu-ch/phpcs-aaa
 ```
 
 If you are not using the [phpcodesniffer-composer-installer](https://github.com/PHPCSStandards/composer-installer), point PHPCS at the standard manually:
 
 ```bash
-vendor/bin/phpcs --config-set installed_paths vendor/aaa-lint/phpcs-aaa
+vendor/bin/phpcs --config-set installed_paths vendor/babu-ch/phpcs-aaa
 ```
 
 ## Usage

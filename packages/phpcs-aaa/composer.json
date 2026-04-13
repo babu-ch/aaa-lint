@@ -1,5 +1,5 @@
 {
-  "name": "aaa-lint/phpcs-aaa",
+  "name": "babu-ch/phpcs-aaa",
   "description": "PHP_CodeSniffer standard that enforces the Arrange-Act-Assert pattern in test code.",
   "type": "phpcodesniffer-standard",
   "license": "MIT",

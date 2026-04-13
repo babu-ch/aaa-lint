@@ -1,11 +1,11 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rubocop-aaa'
   spec.version       = '0.0.1'
-  spec.authors       = ['aaa-lint contributors']
+  spec.authors       = ['babu-ch']
   spec.summary       = 'RuboCop cop enforcing the Arrange-Act-Assert pattern in test code.'
   spec.description   = 'A custom RuboCop cop that checks test blocks contain arrange/act/assert comments in order.'
   spec.license       = 'MIT'
-  spec.homepage      = 'https://github.com/aaa-lint/aaa-lint'
+  spec.homepage      = 'https://github.com/babu-ch/aaa-lint'
 
   spec.required_ruby_version = '>= 3.0'
 
