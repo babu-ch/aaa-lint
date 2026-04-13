@@ -40,6 +40,14 @@ There is no built-in preset besides the English default. Use the `labels` option
 }
 ```
 
+## Development
+
+All tests run inside Docker — no local Node/Ruby/PHP installs required. See [DEVELOPMENT.md](./DEVELOPMENT.md).
+
+```bash
+make test          # run all three language suites
+```
+
 ## License
 
 MIT

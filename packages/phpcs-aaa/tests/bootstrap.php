@@ -1,6 +1,9 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/squizlabs/php_codesniffer/autoload.php';
+// PHPCS defines its T_* polyfill constants inside Util\Tokens; force-load it.
+new \PHP_CodeSniffer\Util\Tokens();
 
 if (!defined('PHP_CODESNIFFER_CBF')) {
     define('PHP_CODESNIFFER_CBF', false);

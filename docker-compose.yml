@@ -1,0 +1,22 @@
+services:
+  node:
+    image: node:20-alpine
+    working_dir: /work
+    volumes:
+      - .:/work
+    command: sh -c "npm install --silent && npm test --workspaces --if-present"
+
+  ruby:
+    image: ruby:3.2-alpine
+    working_dir: /work/packages/rubocop-aaa
+    volumes:
+      - .:/work
+    command: sh -c "apk add --no-cache build-base git && bundle config set --local path vendor/bundle && bundle install --quiet && bundle exec rspec"
+
+  php:
+    image: composer:2
+    working_dir: /work/packages/phpcs-aaa
+    volumes:
+      - .:/work
+    entrypoint: sh
+    command: -c "composer install --no-interaction --quiet && vendor/bin/phpunit"
