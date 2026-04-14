@@ -22,11 +22,11 @@ it('adds two numbers', () => {
 
 ## Packages
 
-| Language | Linter | Package | Status |
+| Language | Linter | Package | Version |
 |---|---|---|---|
-| JS / TS | ESLint | [`eslint-plugin-aaa-pattern`](./packages/eslint-plugin-aaa-pattern) | WIP |
-| Ruby | RuboCop | [`rubocop-aaa`](./packages/rubocop-aaa) | WIP |
-| PHP | PHP_CodeSniffer | [`phpcs-aaa`](./packages/phpcs-aaa) | WIP |
+| JS / TS | ESLint | [`eslint-plugin-aaa-pattern`](./packages/eslint-plugin-aaa-pattern) | [![npm](https://img.shields.io/npm/v/eslint-plugin-aaa-pattern.svg?label=npm)](https://www.npmjs.com/package/eslint-plugin-aaa-pattern) |
+| Ruby | RuboCop | [`rubocop-aaa`](./packages/rubocop-aaa) | [![gem](https://img.shields.io/gem/v/rubocop-aaa.svg?label=gem)](https://rubygems.org/gems/rubocop-aaa) |
+| PHP | PHP_CodeSniffer | [`phpcs-aaa`](./packages/phpcs-aaa) | [![packagist](https://img.shields.io/packagist/v/babu-ch/phpcs-aaa.svg?label=packagist)](https://packagist.org/packages/babu-ch/phpcs-aaa) |
 
 ## Customizing labels
 
