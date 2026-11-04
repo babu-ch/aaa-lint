@@ -2,11 +2,8 @@
 # Publish eslint-plugin-aaa-pattern to npm at the version in package.json.
 # Usage:  scripts/release-eslint.sh
 #
-# The actual `npm publish` runs in GitHub Actions
-# (.github/workflows/release-eslint.yml) via npm Trusted Publishing,
-# triggered by the tag this script pushes. No npm login / OTP needed locally.
-#
 # Prereqs:
+#   - npm login (with publish access to eslint-plugin-aaa-pattern)
 #   - packages/eslint-plugin-aaa-pattern/package.json "version" already bumped + committed
 #   - clean working tree on main
 #
@@ -28,9 +25,15 @@ VERSION=$(node -p "require('$PKG_JSON').version")
 echo "==> Releasing eslint-plugin-aaa-pattern@$VERSION"
 require_tag_not_exists "eslint-plugin-aaa-pattern-v$VERSION"
 
+echo "==> Publishing to npm (prepublishOnly will run npm test first)..."
+ACCESS_FLAG=""
+if ! npm view eslint-plugin-aaa-pattern >/dev/null 2>&1; then
+  echo "    First publish detected, adding --access public"
+  ACCESS_FLAG="--access public"
+fi
+npm publish --workspace=eslint-plugin-aaa-pattern $ACCESS_FLAG
+
 create_tag "eslint-plugin-aaa-pattern-v$VERSION"
 
 echo
-echo "Tag pushed. GitHub Actions will publish to npm:"
-echo "  https://github.com/babu-ch/aaa-lint/actions/workflows/release-eslint.yml"
-echo "  https://www.npmjs.com/package/eslint-plugin-aaa-pattern/v/$VERSION"
+echo "Done. https://www.npmjs.com/package/eslint-plugin-aaa-pattern/v/$VERSION"

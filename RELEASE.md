@@ -16,7 +16,7 @@ Releases are **manual on purpose** — release frequency is low and we want a hu
 |---|---|---|---|
 | Bump version | edit `package.json` | edit `.gemspec` | (none — Packagist reads git tags) |
 | Build artifact | npm packs `src/` | `gem build` produces `.gem` | `git subtree split` |
-| Push | push tag → GitHub Actions runs `npm publish` (Trusted Publishing) | `gem push` | push to split mirror + tag |
+| Push | `npm publish` | `gem push` | push to split mirror + tag |
 | User installs via | `npm install eslint-plugin-aaa-pattern@<v>` | `gem install rubocop-aaa -v <v>` | `composer require babu-ch/phpcs-aaa:<v>` |
 
 Each release script also creates a per-package tag in the monorepo (`eslint-plugin-aaa-pattern-v<v>`, etc.) so `git log --tags` shows the release history.
@@ -54,8 +54,8 @@ All scripts:
 
 `release-eslint.sh`:
 - Reads the version from `packages/eslint-plugin-aaa-pattern/package.json`.
-- Only creates and pushes the `eslint-plugin-aaa-pattern-v<version>` tag. The tag triggers `.github/workflows/release-eslint.yml`, which publishes to npm via [Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC — no npm token or OTP). `prepublishOnly` still runs the test suite there.
-- The workflow refuses to publish if the tag does not match `package.json`.
+- Lets `npm publish`'s `prepublishOnly` hook run the test suite.
+- Adds `--access public` automatically on the first publish (when the package does not yet exist on npm).
 
 `release-rubocop.sh`:
 - Reads the version from `packages/rubocop-aaa/rubocop-aaa.gemspec`.
@@ -71,7 +71,7 @@ All scripts:
 
 | Registry | Setup |
 |---|---|
-| npm | None locally. One-time on npmjs.com: package → Settings → Trusted Publisher → GitHub Actions, repo `babu-ch/aaa-lint`, workflow `release-eslint.yml`. |
+| npm | `npm login` (npm.js account with publish access). 2FA enabled. |
 | RubyGems | `gem signin` (RubyGems account with push access). 2FA enabled — gemspec sets `rubygems_mfa_required = 'true'`. |
 | Packagist | `git remote add phpcs-aaa-split https://github.com/babu-ch/phpcs-aaa.git`. Packagist itself only needs to be told about the split repo once at the very first release (Submit the URL on packagist.org). |
 
