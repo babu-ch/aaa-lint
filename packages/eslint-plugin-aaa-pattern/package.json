@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-aaa-pattern",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ESLint plugin that enforces the Arrange-Act-Assert pattern in test code.",
   "keywords": [
     "eslint",
