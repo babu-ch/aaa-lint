@@ -51,3 +51,15 @@ cd packages/phpcs-aaa && composer install && composer test
 ```bash
 make clean   # remove node_modules, vendor/, .bundle/
 ```
+
+## CI
+
+`.github/workflows/test.yml` runs on every push to `main` and on pull requests. It uses `dorny/paths-filter` so only packages with changes are tested:
+
+| Package | Matrix |
+|---|---|
+| `eslint-plugin-aaa-pattern` | Node 20 / 22 / 24 × ESLint 9 / 10 |
+| `rubocop-aaa` | Ruby 3.1 / 3.3 / 3.4 |
+| `phpcs-aaa` | PHP 7.4 / 8.1 / 8.4 × PHP_CodeSniffer 3 / 4 |
+
+Run it manually from the Actions tab (`workflow_dispatch`) to test every package regardless of changes. Dependabot (`.github/dependabot.yml`) checks npm, Bundler, Composer, and GitHub Actions monthly.
