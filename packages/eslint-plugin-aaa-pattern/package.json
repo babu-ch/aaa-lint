@@ -29,10 +29,10 @@
     "prepublishOnly": "npm test"
   },
   "peerDependencies": {
-    "eslint": "^8.0.0 || ^9.0.0"
+    "eslint": "^8.0.0 || ^9.0.0 || ^10.0.0"
   },
   "devDependencies": {
-    "eslint": "^9.0.0"
+    "eslint": "^10.14.0"
   },
   "engines": {
     "node": ">=18"
