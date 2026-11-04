@@ -13,7 +13,9 @@ if (!defined('PHP_CODESNIFFER_VERBOSITY')) {
 }
 
 // Register the AAA standard path so Ruleset can find it by name.
-\PHP_CodeSniffer\Config::setConfigData(
+// setConfigData() is static in PHPCS 3 and an instance method in PHPCS 4;
+// calling it on an instance works for both.
+(new \PHP_CodeSniffer\Config([], false))->setConfigData(
     'installed_paths',
     realpath(__DIR__ . '/..'),
     true
