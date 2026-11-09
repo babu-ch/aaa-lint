@@ -62,4 +62,4 @@ make clean   # remove node_modules, vendor/, .bundle/
 | `rubocop-aaa` | Ruby 3.1 / 3.3 / 3.4 |
 | `phpcs-aaa` | PHP 7.4 / 8.1 / 8.4 × PHP_CodeSniffer 3 / 4 |
 
-Run it manually from the Actions tab (`workflow_dispatch`) to test every package regardless of changes. Dependabot (`.github/dependabot.yml`) checks npm, Bundler, Composer, and GitHub Actions monthly.
+Run it manually from the Actions tab (`workflow_dispatch`) to test every package regardless of changes. Dependabot (`.github/dependabot.yml`) checks npm and GitHub Actions monthly.

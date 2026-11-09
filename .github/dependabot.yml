@@ -8,16 +8,6 @@ updates:
       npm:
         patterns: ['*']
 
-  - package-ecosystem: bundler
-    directory: /packages/rubocop-aaa
-    schedule:
-      interval: monthly
-
-  - package-ecosystem: composer
-    directory: /packages/phpcs-aaa
-    schedule:
-      interval: monthly
-
   - package-ecosystem: github-actions
     directory: /
     schedule:
